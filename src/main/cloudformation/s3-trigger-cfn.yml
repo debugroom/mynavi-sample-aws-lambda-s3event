@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Sample CloudFormation template with YAML - S3 Bucket Definition
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DependsOn: LambdaInvokePermission
+    Properties:
+      BucketName: debugroom-mynavi-sample-lambda-s3event
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function:
+              Fn::ImportValue: MynaviSampleLambdaS3Event-LambdaArn
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::ImportValue: MynaviSampleLambdaS3Event-LambdaArn
+      Principal: s3.amazonaws.com
+      Action: lambda:InvokeFunction
+      SourceArn: !Join
+        - ""
+        - - "arn:aws:s3:::"
+          - "debugroom-mynavi-sample-lambda-s3event"
+
+Outputs:
+  S3Bucket:
+    Description: Lambda S3 bucket name
+    Value: !Ref S3Bucket
+    Export:
+      Name: MynaviSampleLambdaS3Event-s3Bucket
+
+  S3BucketArn:
+    Description: S3 for Lambda bucket arn
+    Value: !GetAtt S3Bucket.Arn
+    Export:
+      Name: MynaviSampleLambdaS3Event-s3BucketArn

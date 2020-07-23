@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Sample CloudFormation template with YAML - DynamoDB Definition
+
+Resources:
+  DynamoDBUploadFileTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "upload-file-table"
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: fileId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: fileId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+Outputs:
+  EnvironmentRegion:
+    Description: Dev Environment Region
+    Value: !Sub ${AWS::Region}
+    Export:
+      Name: MynaviSampleLambdaS3Event-DynamoDB-Region
+  DynamoDBServiceEndpoint:
+    Description: DynamoDB service endipoint
+    Value: !Sub https://dynamodb.${AWS::Region}.amazonaws.com
+    Export:
+      Name:  MynaviSampleLambdaS3Event-DynamoDB-ServiceEndpoint
+

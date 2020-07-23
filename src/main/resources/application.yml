@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    function:
+      scan:
+        packages: org.debugroom.mynavi.sample.aws.lambda.s3event.app.function
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: false
+      profileName:
+    region:
+      auto: false
+      static: ap-northeast-1

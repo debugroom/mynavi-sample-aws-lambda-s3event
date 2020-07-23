@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Sample CloudFormation template with YAML - SQS Definition
+
+Resources:
+  SQSSampleQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: mynavi-sample-lambda-s3event-queue
+      VisibilityTimeout: 30
+      DelaySeconds: 5
+      MaximumMessageSize: 26144
+      MessageRetentionPeriod: 345600
+      ReceiveMessageWaitTimeSeconds: 0
+
+Outputs:
+  SQSServiceEndpoint:
+    Description: SQS service endipoint
+    Value: !Sub https://sqs.${AWS::Region}.amazonaws.com
+    Export:
+      Name: MynaviSampleLambdaS3Event-SQS-ServiceEndpoint
+
+  SQSServiceRegion:
+    Description: SQS service region
+    Value: !Sub ${AWS::Region}
+    Export:
+      Name: MynaviSampleLambdaS3Event-SQS-Region
+
+  SQSSampleQueue:
+    Description: SQS sample queue name
+    Value: !Ref SQSSampleQueue
+    Export:
+      Name: MynaviSampleLambdaS3Event-SQS-QueueName
